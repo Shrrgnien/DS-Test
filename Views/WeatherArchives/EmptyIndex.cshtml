@@ -1,0 +1,351 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model PaginatedList<WeatherRecord>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var currentPage = Model.PageIndex;
+    var lastPage = Model.TotalPages;
+}
+
+
+<form class="py-4">
+    <div class="row gx-1">
+        <div class="col-auto">
+            <select class="form-select" id="exampleFormControlSelect1" name="month">
+                <option selected>@ViewData["SelectedMonth"]</option>
+                <option>Январь</option>
+                <option>Февраль</option>
+                <option>Март</option>
+                <option>Апрель</option>
+                <option>Май</option>
+                <option>Июнь</option>
+                <option>Июль</option>
+                <option>Август</option>
+                <option>Сентябрь</option>
+                <option>Октябрь</option>
+                <option>Ноябрь</option>
+                <option>Декабрь</option>
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <select class="form-select" id="exampleFormControlSelect1" name="year">
+                <option selected>@ViewData["SelectedYear"]</option>
+                @for(int i = 2000; i<DateTime.Now.Year; i++)
+                {
+                    <option>@i</option>
+                }
+            </select>
+        </div>
+        <button class="col-auto btn btn-primary" type="submit" asp-action="Index">Show</button>
+    </div>
+   
+</form>
+
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+
+        <li class="page-item @prevDisabled">
+            <a class="page-link" 
+               asp-action="Index" 
+               asp-route-pageNumber="1"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]">
+               <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link btn @prevDisabled"
+               asp-action="Index" 
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]">
+                Previous
+            </a>
+        </li>
+
+        @{
+            var startPage = (currentPage == 1) ? currentPage : (currentPage == 2) ? currentPage-1 : currentPage - 2;
+
+            var endPage = currentPage > 3 ? currentPage + 2 : 5;
+
+            if (lastPage - currentPage < 3)
+            {
+                startPage = currentPage - (4 -(lastPage - currentPage));
+                endPage = lastPage;
+            }
+
+            if(lastPage < 5)
+            {
+                startPage = 1;
+                endPage = lastPage;
+            }
+
+
+            for (int i = startPage; i <= endPage; i++)
+            {
+                if(i == currentPage)
+                {
+                    <li class="page-item active"><a class="page-link" href="#">@i</a></li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a class="page-link" 
+                           asp-action="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-month="@ViewData["SelectedMonth"]"
+                           asp-route-year="@ViewData["SelectedYear"]">
+                           @i
+                       </a>
+                    </li>
+                }
+            }
+        }
+        <li class="page-item">
+            <a class="page-link btn @nextDisabled"
+               asp-action="Index"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]">
+                Next
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" 
+                asp-action="Index" 
+                asp-route-pageNumber="@lastPage" 
+                asp-route-month="@ViewData["SelectedMonth"]"
+                asp-route-year="@ViewData["SelectedYear"]" aria-label="Previous">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+
+        <li class ="page-item">
+            <form>
+                <div class="input-group mb-3 px-1">
+                    <input 
+                        type="number" 
+                        min="1" 
+                        max="@lastPage" 
+                        class="form-control g-2" 
+                        placeholder="Page" 
+                        aria-label="Recipient's username" 
+                        aria-describedby="button-addon2" >
+                    <button class="btn btn-outline-secondary" type="submit" 
+                        asp-action="Index" 
+                        asp-route-month="@ViewData["SelectedMonth"]"
+                        asp-route-year="@ViewData["SelectedYear"]">
+                        Go
+                    </button>
+                </div>
+            </form>
+
+        </li>
+
+    </ul>
+</nav>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>
+                Date
+            </td>
+            <td>
+                Time
+            </td>
+            <td>
+                Temperature
+            </td>
+            <td>
+                AirHumidity
+            </td>
+            <td>
+                Td
+            </td>
+            <td>
+                Pressure
+            </td>
+            <td>
+                AirFlowDirection
+            </td>
+            <td>
+                AirFlowSpeed
+            </td>
+            <td>
+                Cloudiness
+            </td>
+            <td>
+                h
+            </td>
+            <td>
+                VV
+            </td>
+            <td>
+                WeatherEvents
+            </td>
+        </tr>
+    </thead>
+   
+    <tbody>
+        @foreach (var record in Model)
+        {
+            <tr>
+                <td>
+                    @record.Date.ToShortDateString()
+                </td>
+                <td>
+                    @record.Date.ToShortTimeString()
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.Temperature)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.AirHumidity)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.Td)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.Pressure)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.AirFlowDirection)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.AirFlowSpeed)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.Cloudiness)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.h)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.VV)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => record.WeatherEvents)
+                </td>
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+
+        <li class="page-item @prevDisabled">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-pageNumber="1"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link btn @prevDisabled"
+               asp-action="Index"
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]">
+                Previous
+            </a>
+        </li>
+
+        @{
+            startPage = (currentPage == 1) ? currentPage : (currentPage == 2) ? currentPage - 1 : currentPage - 2;
+
+            endPage = currentPage > 3 ? currentPage + 2 : 5;
+
+            if (lastPage - currentPage < 3)
+            {
+                startPage = currentPage - (4 - (lastPage - currentPage));
+                endPage = lastPage;
+            }
+
+            if (lastPage < 5)
+            {
+                startPage = 1;
+                endPage = lastPage;
+            }
+
+
+            for (int i = startPage; i <= endPage; i++)
+            {
+                if (i == currentPage)
+                {
+                    <li class="page-item active"><a class="page-link" href="#">@i</a></li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+               asp-action="Index"
+               asp-route-pageNumber="@i"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]">
+                            @i
+                        </a>
+                    </li>
+                }
+            }
+        }
+        <li class="page-item">
+            <a class="page-link btn @nextDisabled"
+               asp-action="Index"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]">
+                Next
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-pageNumber="@lastPage"
+               asp-route-month="@ViewData["SelectedMonth"]"
+               asp-route-year="@ViewData["SelectedYear"]" aria-label="Previous">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <form>
+                <div class="input-group mb-3 px-1">
+                    <input type="number"
+                           min="1"
+                           max="@lastPage"
+                           class="form-control g-2"
+                           placeholder="Page"
+                           aria-label="Recipient's username"
+                           aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="submit"
+                            asp-action="Index"
+                            asp-route-month="@ViewData["SelectedMonth"]"
+                            asp-route-year="@ViewData["SelectedYear"]">
+                        Go
+                    </button>
+                </div>
+            </form>
+
+        </li>
+
+    </ul>
+</nav>
+

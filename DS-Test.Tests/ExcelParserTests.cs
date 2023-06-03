@@ -14,10 +14,7 @@ namespace DS_Test.Tests
     {
         private string _dataFolder = "TestData";
         private string _fileName = "moskva_2010.xlsx";
-        private Mock<IWeatherArchivesRepository> _mockRepo;
-        private Mock<ILogger<WeatherRecordExcelParser>> _mockLogger;
-        private ILogger<WeatherRecordExcelParser> _logger => _mockLogger.Object;
-        private IWeatherArchivesRepository _repo => _mockRepo.Object;
+        private int _expectedRecordsCount = 2718;
 
         private WeatherRecord _expectedFirstRecord = new()
         {
@@ -33,7 +30,6 @@ namespace DS_Test.Tests
             Pressure = 737,
             Td = -6.9
         };
-
         private WeatherRecord _expectedLastRecord = new()
         {
             Date = DateTime.Parse("31.12.2010 03:00"),
@@ -48,13 +44,17 @@ namespace DS_Test.Tests
             Pressure = 746,
             Td = -12.5
         };
-        private int _expectedRecordsCount = 2718;
-
         private List<WeatherRecord> _weatherRecords = new List<WeatherRecord>
         {
             new WeatherRecord { Id = 1, Date = DateTime.Now },
             new WeatherRecord { Id = 2, Date = DateTime.Now }
         };
+
+        private Mock<IWeatherArchivesRepository> _mockRepo;
+        private Mock<ILogger<WeatherRecordExcelParser>> _mockLogger;
+
+        private ILogger<WeatherRecordExcelParser> _logger => _mockLogger.Object;
+        private IWeatherArchivesRepository _repo => _mockRepo.Object;
 
         public ExcelParserTests()
         {

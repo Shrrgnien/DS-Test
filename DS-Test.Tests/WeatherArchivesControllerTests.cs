@@ -63,7 +63,6 @@ namespace DS_Test.Tests
         public void ArchiveLoaderPost_ReturnsaViewResult_WithFilesViewModel()
         {
             var controller = new WeatherArchivesController(_logger, _parser, _repo);
-
         }
     }
 }

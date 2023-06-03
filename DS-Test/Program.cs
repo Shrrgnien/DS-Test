@@ -1,4 +1,7 @@
+using DS_Test.Interfaces;
+using DS_Test.Models;
 using DS_Test.Models.Database;
+using DS_Test.Services;
 using Microsoft.EntityFrameworkCore;
 using NPOI;
 namespace DS_Test
@@ -12,6 +15,8 @@ namespace DS_Test
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+            builder.Services.AddScoped<IWeatherArchivesRepository, WeatherArchivesRepository>();
+            builder.Services.AddScoped<IExcelParser<WeatherRecord>, WeatherRecordExcelParser>();
 
             builder.Services.AddDbContext<MainContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainContext")));

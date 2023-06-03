@@ -80,7 +80,7 @@ namespace DS_Test.Controllers
 
                 if (weatherArchive.Count > 0)
                 {
-                    _repository.AddRecords(weatherArchive);
+                    await _repository.AddRecordsAsync(weatherArchive);
                 }
             }
             catch (Exception ex)

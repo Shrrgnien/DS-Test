@@ -15,7 +15,7 @@ namespace DS_Test.Services
             _context = context;
         }
 
-        public async void AddRecords(IEnumerable<WeatherRecord> records)
+        public async Task AddRecordsAsync(IEnumerable<WeatherRecord> records)
         {
             await _context.WeatherRecords.AddRangeAsync(records);
             await _context.SaveChangesAsync();

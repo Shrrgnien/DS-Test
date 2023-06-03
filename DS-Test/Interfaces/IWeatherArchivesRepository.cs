@@ -5,7 +5,7 @@ namespace DS_Test.Interfaces
     public interface IWeatherArchivesRepository
     {
         List<WeatherRecord> GetAllRecords();
-        void AddRecords(IEnumerable<WeatherRecord> records);
+        Task AddRecordsAsync(IEnumerable<WeatherRecord> records);
         Dictionary<DateTime, WeatherRecord> GetRecordsDictionary();
         IQueryable<WeatherRecord> GetRecordsAsQueryable();
     }

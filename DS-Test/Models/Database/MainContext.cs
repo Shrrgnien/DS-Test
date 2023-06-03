@@ -9,7 +9,7 @@ namespace DS_Test.Models.Database
         public DbSet<WeatherRecord> WeatherRecords { get; set; }
         public MainContext(DbContextOptions<MainContext> options) : base(options) 
         {
+            Database.Migrate();
         }
-
     }
 }

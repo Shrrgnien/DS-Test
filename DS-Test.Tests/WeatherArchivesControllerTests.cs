@@ -32,6 +32,8 @@ namespace DS_Test.Tests
 
             _mockLogger = new Mock<ILogger<WeatherArchivesController>>();
             _mockParser = new Mock<IExcelParser<WeatherRecord>>();
+
+            _mockParser.Setup(p => p.)
         }
         [Fact]
         public async Task Index_ReturnsAViewResult_WithAListOfWeatherRecord()
@@ -57,12 +59,6 @@ namespace DS_Test.Tests
             var model = Assert.IsAssignableFrom<FilesViewModel>(
                 viewResult.ViewData.Model);
             Assert.Null(model.File);
-        }
-
-        [Fact]
-        public void ArchiveLoaderPost_ReturnsaViewResult_WithFilesViewModel()
-        {
-            var controller = new WeatherArchivesController(_logger, _parser, _repo);
         }
     }
 }

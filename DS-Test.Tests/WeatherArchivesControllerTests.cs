@@ -32,8 +32,6 @@ namespace DS_Test.Tests
 
             _mockLogger = new Mock<ILogger<WeatherArchivesController>>();
             _mockParser = new Mock<IExcelParser<WeatherRecord>>();
-
-            _mockParser.Setup(p => p.)
         }
         [Fact]
         public async Task Index_ReturnsAViewResult_WithAListOfWeatherRecord()

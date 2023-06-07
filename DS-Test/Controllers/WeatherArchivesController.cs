@@ -28,31 +28,22 @@ namespace DS_Test.Controllers
             try
             {
                 var records = _repository.GetRecordsAsQueryable();
-                if(records?.Count() > 0)
+
+                if (records.Count() > 0)
                 {
                     if (DateTime.TryParseExact(year, "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var y))
                     {
-                        if (DateTime.TryParseExact(month, "MMMM", CultureInfo.GetCultureInfo("ru"), DateTimeStyles.None, out var m))
-                        {
-                            return View(await PaginatedList<WeatherRecord>.CreateAsync(records
-                                .Where(r => r.Date.Year == y.Year && r.Date.Month == m.Month)
-                                .OrderBy(r => r.Date), pageNumber ?? 1, _pageSize));
-                        }
-                        else
-                        {
-                            return View(await PaginatedList<WeatherRecord>.CreateAsync(records
-                                .Where(r => r.Date.Year == y.Year)
-                                .OrderBy(r => r.Date), pageNumber ?? 1, _pageSize));
-                        }
+                        records = records.Where(r => r.Date.Year == y.Year);
                     }
-                    else if (DateTime.TryParseExact(month, "MMMM", CultureInfo.GetCultureInfo("ru"), DateTimeStyles.None, out var m))
+
+                    if (DateTime.TryParseExact(month, "MMMM", CultureInfo.GetCultureInfo("ru"), DateTimeStyles.None, out var m))
                     {
-                        return View(await PaginatedList<WeatherRecord>.CreateAsync(records
-                            .Where(r => r.Date.Month == m.Month)
-                            .OrderBy(r => r.Date), pageNumber ?? 1, _pageSize));
+                        records = records.Where(r => r.Date.Month == m.Month);
                     }
-                    return View(await PaginatedList<WeatherRecord>
-                        .CreateAsync(records.OrderBy(r => r.Date), pageNumber ?? 1, _pageSize));
+
+                    records = records.OrderBy(r => r.Date);
+
+                    return View(await PaginatedList<WeatherRecord>.CreateAsync(records, pageNumber ?? 1, _pageSize));
                 }
             }
             catch(Exception ex)
